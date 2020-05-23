@@ -229,6 +229,15 @@ def NumBinOp(operator, t0, t1, t2):
 		],
 	]
 
+def IsFunction(f):
+	"""
+	f is a mathematical function.
+	iff x1 == x2 => f(x1) == f(x2)
+	"""
+	return ["forall",
+		[["tl", "TList"]],
+		["fu", ["fm", ["fv", f]], "tl"],
+	]
 
 # --------------------------
 # SMTLIB recursive functions

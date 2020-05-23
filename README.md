@@ -69,7 +69,7 @@ In order to use CutEr, you need the following programs:
 
   If this sequence of commands does not work for you, follow the instructions in Z3's [GitHub repository](https://github.com/Z3Prover/z3/).
 
-  Note that CutEr does not work properly with the v4.8.7 release of Z3 due to e.g. [this issue](https://github.com/Z3Prover/z3/issues/3051). It does, however, work well with many previous releases of Z3, for example v4.8.6.
+  Note that CutEr requires Z3 v4.8.8 or higher.
 
 4. **Protocol Buffer Compiler**
 

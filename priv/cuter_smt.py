@@ -17,6 +17,45 @@ class ErlangSMT(cgs.AbstractErlangSolver):
 		self.commands.append(["declare-datatypes", [], datatypes])
 		self.commands.append(["declare-fun", "fa", ["Int"], "Int"])
 		self.commands.append(["declare-fun", "fm", ["Int"], "FList"])
+		# fnp(f, t) = true => t is not defined for f.
+		self.commands.append([
+			"define-fun-rec",
+			"fnp",
+			[["f", "FList"], ["t", "TList"]],
+			"Bool",
+			["or",
+				["is-fn", "f"],
+				["and",
+					["is-fc", "f"],
+					["not", ["=", ["fx", "f"], "t"]],
+ 					["fnp", ["ft", "f"], "t"],
+				],
+			],
+ 		])
+		# fu(f, t) = true => t is defined at most once for f.
+		self.commands.append([
+			"define-fun-rec",
+			"fu",
+			[["f", "FList"], ["t", "TList"]],
+			"Bool",
+			["or",
+				["is-fn", "f"],
+				["and",
+					["is-fc", "f"],
+					["or",
+						["and",
+							["not", ["=", ["fx", "f"], "t"]],
+							["fu", ["ft", "f"], "t"],
+						],
+						["and",
+							["=", ["fx", "f"], "t"],
+							["fnp", ["ft", "f"], "t"],
+						],
+					],
+					["fu", ["ft", "f"], "t"],
+				],
+			],
+ 		])
 		self.setSolver = lambda: cuter_smt_process.SolverZ3(timeout)
 		self.solver = self.setSolver()
 		self.define_funs_rec = []
@@ -378,7 +417,8 @@ class ErlangSMT(cgs.AbstractErlangSolver):
 				["is-fun", var],
 				["=", ["fa", ["fv", var]], build_int(len(par_spec))],
 				[name, ["fm", ["fv", var]]],
-				["not", ["=", ["fm", ["fv", var]], "fn"]]
+				["not", ["=", ["fm", ["fv", var]], "fn"]],
+				IsFunction(var),
 			]
 		elif cc.is_type_generic_fun(spec):
 			par_spec = None
@@ -387,7 +427,8 @@ class ErlangSMT(cgs.AbstractErlangSolver):
 			return ["and",
 				["is-fun", var],
 				[name, ["fm", ["fv", var]]],
-				["not", ["=", ["fm", ["fv", var]], "fn"]]
+				["not", ["=", ["fm", ["fv", var]], "fn"]],
+				IsFunction(var),
 			]
 		elif cc.is_type_atomlit(spec):
 			return ["=", var, self.decode(cc.get_literal_from_atomlit(spec))]
