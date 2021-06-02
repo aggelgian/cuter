@@ -2,9 +2,9 @@ os: linux
 dist: bionic
 language: erlang
 before_install:
-  - wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.8/z3-4.8.8-x64-ubuntu-16.04.zip
-  - unzip z3-4.8.8-x64-ubuntu-16.04.zip
-  - mv z3-4.8.8-x64-ubuntu-16.04 z3
+  - wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.10/z3-4.8.10-x64-ubuntu-18.04.zip
+  - unzip z3-4.8.10-x64-ubuntu-18.04.zip
+  - mv z3-4.8.10-x64-ubuntu-18.04 z3
   - export PATH=$PWD/z3/bin:$PATH
   - export PYTHONPATH=$PWD/z3/bin/python:$PYTHONPATH
   - export C_INCLUDE_PATH=$PWD/z3/include/:$C_INCLUDE_PATH
